@@ -1,28 +1,39 @@
-    <h1>{{ isset($product) ? 'Edit Product' : 'Add New Product' }}</h1>
-    <form action="{{ isset($product) ? route('products.update', $product->id) : route('products.store') }}" method="POST">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Producten</title>
+    <!-- Add the following link to include Tailwind CSS stylesheet -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.15/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="p-6">
+    <h1 class="text-2xl font-bold">{{ isset($product) ? 'Edit Product' : 'Add New Product' }}</h1>
+    <form action="{{ isset($product) ? route('products.update', $product->id) : route('products.store') }}" method="POST" class="mt-4">
         @csrf
         @if(isset($product))
             @method('PUT')
         @endif
-        <div class="form-group">
-            <label for="name">Name</label>
-            <input type="text" class="form-control" id="name" name="name" value="{{ isset($product) ? $product->naam : old('naam') }}">
+        <div class="mb-4">
+            <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+            <input type="text" class="mt-1 p-2 border rounded-md w-full" id="name" name="name" value="{{ isset($product) ? $product->naam : old('naam') }}">
         </div>
-        <div class="form-group">
-            <label for="description">Description</label>
-            <textarea class="form-control" id="description" name="description">{{ isset($product) ? $product->beschrijving : old('beschrijving') }}</textarea>
+        <div class="mb-4">
+            <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+            <textarea class="mt-1 p-2 border rounded-md w-full" id="description" name="description">{{ isset($product) ? $product->beschrijving : old('beschrijving') }}</textarea>
         </div>
-        <div class="form-group">
-            <label for="price">Price</label>
-            <input type="number" class="form-control" id="price" name="price" value="{{ isset($product) ? $product->prijs : old('prijs') }}">
+        <div class="mb-4">
+            <label for="price" class="block text-sm font-medium text-gray-700">Price</label>
+            <input type="number" class="mt-1 p-2 border rounded-md w-full" id="price" name="price" value="{{ isset($product) ? $product->prijs : old('prijs') }}">
         </div>
-        <div class="form-group">
-            <label for="discount">Discount</label>
-            <input type="number" class="form-control" id="discount" name="discount" value="{{ isset($product) ? $product->korting : old('korting') }}">
+        <div class="mb-4">
+            <label for="discount" class="block text-sm font-medium text-gray-700">Discount</label>
+            <input type="number" class="mt-1 p-2 border rounded-md w-full" id="discount" name="discount" value="{{ isset($product) ? $product->korting : old('korting') }}">
         </div>
-        <div class="form-group">
-            <label for="categories">Categories</label>
-            <select name="categories[]" id="categories" class="form-control" multiple>
+        <div class="mb-4">
+            <label for="categories" class="block text-sm font-medium text-gray-700">Categories</label>
+            <select name="categories[]" id="categories" class="mt-1 p-2 border rounded-md w-full" multiple>
                 @foreach($categories as $category)
                     <option value="{{ $category->id }}" {{ isset($product) && in_array($category->id, $product->categorieen->pluck('id')->toArray()) ? 'selected' : '' }}>
                         {{ $category->naam }}
@@ -30,6 +41,24 @@
                 @endforeach
             </select>
         </div>
-        <!-- Add fields for categories and tags selection here -->
-        <button type="submit" class="btn btn-primary">{{ isset($product) ? 'Update' : 'Add' }}</button>
+        <div class="mb-4">
+            <label for="tags" class="block text-sm font-medium text-gray-700">Tags</label>
+            <input type="text" name="tags_input" id="tags_input" class="mt-1 p-2 border rounded-md w-full" placeholder="Enter tags">
+        </div>
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Existing Tags:</label>
+            <div class="mt-1">
+                @foreach($tags as $tag)
+                    <label class="inline-flex items-center mr-4">
+                        <input type="checkbox" name="tags[]" value="{{ $tag->id }}"
+                            {{ isset($product) && in_array($tag->id, $product->tags->pluck('id')->toArray()) ? 'checked' : '' }}>
+                        <span class="ml-2">{{ $tag->naam }}</span>
+                    </label>
+                @endforeach
+            </div>
+        </div>
+        <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded">{{ isset($product) ? 'Update' : 'Add' }}</button>
     </form>
+</div>
+</body>
+</html>

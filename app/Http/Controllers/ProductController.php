@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Producten;
 use App\Models\Categorieen;
+use App\Models\Tags;
 
 class ProductController extends Controller
 {
@@ -19,7 +20,8 @@ class ProductController extends Controller
     public function create()
     {
         $categories = Categorieen::all();
-        return view('form', compact('categories'));
+        $tags = Tags::all();
+        return view('form', compact('categories', 'tags'));
     }
 
     // Store a newly created product in the database
@@ -43,6 +45,20 @@ class ProductController extends Controller
         // Save the product to the database
         $product->save();
 
+        $tagsInput = $request->input('tags_input');
+        $tagNames = explode(',', $tagsInput);
+        $tagIds = [];
+
+        foreach ($tagNames as $tagName) {
+            $tagName = trim($tagName);
+            if (!empty($tagName)) {
+                $tag = Tags::firstOrCreate(['naam' => $tagName]);
+                $tagIds[] = $tag->id;
+            }
+        }
+
+        $product->tags()->sync($tagIds);
+
         $product->categorieen()->attach($request->input('categories'));
 
         // Add code to handle categories and tags assignment if needed
@@ -55,7 +71,8 @@ class ProductController extends Controller
     {
         $product = Producten::findOrFail($id);
         $categories = Categorieen::all();
-        return view('form', compact('product', 'categories'));
+        $tags = Tags::all();
+        return view('form', compact('product', 'categories', 'tags'));
     }
 
     // Update the specified product in the database
@@ -77,6 +94,21 @@ class ProductController extends Controller
 
         // Save the updated product to the database
         $product->save();
+
+        $selectedTags = $request->input('tags', []);
+        $inputTags = explode(',', $request->input('tags_input'));
+        $tagIds = [];
+
+        foreach ($inputTags as $tagName) {
+            $tagName = trim($tagName);
+            if (!empty($tagName)) {
+                $tag = Tag::firstOrCreate(['naam' => $tagName]);
+                $tagIds[] = $tag->id;
+            }
+        }
+
+        // Sync both selected tags and input tags with the product's tags
+        $product->tags()->sync(array_merge($selectedTags, $tagIds));
 
         $product->categorieen()->sync($request->input('categories'));
 
