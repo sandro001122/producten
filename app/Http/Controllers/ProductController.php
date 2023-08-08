@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Producten;
+use App\Models\Categorieen;
 
 class ProductController extends Controller
 {
@@ -17,7 +18,8 @@ class ProductController extends Controller
     // Show the form for creating a new product
     public function create()
     {
-        return view('products.form');
+        $categories = Categorieen::all();
+        return view('form', compact('categories'));
     }
 
     // Store a newly created product in the database
@@ -32,14 +34,16 @@ class ProductController extends Controller
         ]);
 
         $product = new Producten([
-            'name' => $request->input('name'),
-            'description' => $request->input('description'),
-            'price' => $request->input('price'),
-            'discount' => $request->input('discount'),
+            'naam' => $request->input('name'),
+            'beschrijving' => $request->input('description'),
+            'prijs' => $request->input('price'),
+            'korting' => $request->input('discount'),
         ]);
 
         // Save the product to the database
         $product->save();
+
+        $product->categorieen()->attach($request->input('categories'));
 
         // Add code to handle categories and tags assignment if needed
 
@@ -50,7 +54,8 @@ class ProductController extends Controller
     public function edit($id)
     {
         $product = Producten::findOrFail($id);
-        return view('products.form', compact('product'));
+        $categories = Categorieen::all();
+        return view('form', compact('product', 'categories'));
     }
 
     // Update the specified product in the database
@@ -65,13 +70,15 @@ class ProductController extends Controller
         ]);
 
         $product = Producten::findOrFail($id);
-        $product->name = $request->input('name');
-        $product->description = $request->input('description');
-        $product->price = $request->input('price');
-        $product->discount = $request->input('discount');
+        $product->naam = $request->input('name');
+        $product->korting = $request->input('description');
+        $product->prijs = $request->input('price');
+        $product->korting = $request->input('discount');
 
         // Save the updated product to the database
         $product->save();
+
+        $product->categorieen()->sync($request->input('categories'));
 
         // Add code to handle categories and tags assignment if needed
 
@@ -82,6 +89,10 @@ class ProductController extends Controller
     public function destroy($id)
     {
         $product = Producten::findOrFail($id);
+
+        // Detach categories before deleting
+        $product->categorieen()->detach();
+
         $product->delete();
 
         // Add code to handle related categories and tags if needed

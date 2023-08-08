@@ -1,6 +1,3 @@
-@extends('layouts.app')
-
-@section('content')
     <h1>Products</h1>
     <a href="{{ route('products.create') }}" class="btn btn-primary">Add New Product</a>
     <table class="table table-striped">
@@ -18,12 +15,12 @@
         <tbody>
             @foreach($products as $product)
                 <tr>
-                    <td>{{ $product->name }}</td>
-                    <td>{{ $product->description }}</td>
-                    <td>{{ $product->price }}</td>
-                    <td>{{ $product->discount }}</td>
-                    <td>{{ implode(', ', $product->categories->pluck('name')->toArray()) }}</td>
-                    <td>{{ implode(', ', $product->tags->pluck('name')->toArray()) }}</td>
+                    <td>{{ $product->naam }}</td>
+                    <td>{{ $product->beschrijving }}</td>
+                    <td>{{ $product->prijs }}</td>
+                    <td>{{ $product->korting }}</td>
+                    <td>{{ implode(', ', $product->categorieen->pluck('naam')->toArray()) }}</td>
+                    <td>{{ implode(', ', $product->tags->pluck('naam')->toArray()) }}</td>
                     <td>
                         <a href="{{ route('products.edit', $product->id) }}" class="btn btn-primary">Edit</a>
                         <form action="{{ route('products.destroy', $product->id) }}" method="POST" style="display: inline-block;">
@@ -36,4 +33,3 @@
             @endforeach
         </tbody>
     </table>
-@endsection
