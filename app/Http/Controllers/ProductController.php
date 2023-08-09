@@ -55,19 +55,20 @@ class ProductController extends Controller
         // Save the product to the database
         $product->save();
 
-        $tagsInput = $request->input('tags_input');
-        $tagNames = explode(',', $tagsInput);
+        $selectedTags = $request->input('tags', []);
+        $inputTags = explode(',', $request->input('tags_input'));
         $tagIds = [];
 
-        foreach ($tagNames as $tagName) {
+        foreach ($inputTags as $tagName) {
             $tagName = trim($tagName);
             if (!empty($tagName)) {
-                $tag = Tags::firstOrCreate(['naam' => $tagName]);
+                $tag = Tag::firstOrCreate(['naam' => $tagName]);
                 $tagIds[] = $tag->id;
             }
         }
 
-        $product->tags()->sync($tagIds);
+        // Sync both selected tags and input tags with the product's tags
+        $product->tags()->sync(array_merge($selectedTags, $tagIds));
 
         $product->categorieen()->attach($request->input('categories'));
 

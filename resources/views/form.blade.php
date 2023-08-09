@@ -27,14 +27,14 @@
             <label for="price" class="block text-sm font-medium text-gray-700">Price</label>
             <input type="number" class="mt-1 p-2 border rounded-md w-full" id="price" name="price" value="{{ isset($product) ? $product->prijs : old('prijs') }}">
         </div>
-        <div class="form-group">
-            <label for="discount">Discount (%)</label>
-            <input type="number" name="discount" id="discount" class="form-control" step="0.01" min="0" max="100" value="{{ isset($product) ? $product->korting : '' }}">
+        <div class="mb-4">
+            <label for="discount" class="block text-sm font-medium text-gray-700">Discount (%)</label>
+            <input type="number" name="discount" id="discount" class="mt-1 p-2 border rounded-md w-full" step="0.01" min="0" max="100" value="{{ isset($product) ? $product->korting : '' }}">
         </div>
-        <div class="form-group">
-            <label for="image">Product Image</label>
-            <input type="file" name="image" id="image" class="form-control">
-            @if ($product->images)
+        <div class="mb-4">
+            <label for="image" class="block text-sm font-medium text-gray-700">Product Image</label>
+            <input type="file" name="image" id="image" class="mt-1 p-2 border rounded-md w-full">
+            @if (isset($product) && $product->images)
                 <p class="mt-2">Current Image: <img src="{{ asset('images/' . $product->images) }}" alt="Current Product Image" class="max-w-xs"></p>
             @endif
         </div>
