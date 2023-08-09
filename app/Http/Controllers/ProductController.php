@@ -32,14 +32,24 @@ class ProductController extends Controller
             'description' => 'required',
             'price' => 'required|numeric',
             'discount' => 'numeric',
-            // Add validation rules for categories and tags if needed
         ]);
+
+        // Handle image uploading
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imagePath = 'images/';
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path($imagePath), $imageName);
+        } else {
+            $imageName = null;
+        }
 
         $product = new Producten([
             'naam' => $request->input('name'),
             'beschrijving' => $request->input('description'),
             'prijs' => $request->input('price'),
             'korting' => $request->input('discount'),
+            'images' => $imageName,
         ]);
 
         // Save the product to the database
@@ -61,8 +71,6 @@ class ProductController extends Controller
 
         $product->categorieen()->attach($request->input('categories'));
 
-        // Add code to handle categories and tags assignment if needed
-
         return redirect()->route('products.index')->with('success', 'Product added successfully!');
     }
 
@@ -83,10 +91,28 @@ class ProductController extends Controller
             'description' => 'required',
             'price' => 'required|numeric',
             'discount' => 'numeric',
-            // Add validation rules for categories and tags if needed
         ]);
-
         $product = Producten::findOrFail($id);
+
+        // Handle image uploading
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imagePath = 'images/';
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path($imagePath), $imageName);
+
+            // Delete the old image if it exists
+            if ($product->images) {
+                $oldImagePath = public_path($imagePath . $product->images);
+                if (file_exists($oldImagePath)) {
+                    unlink($oldImagePath);
+                }
+            }
+
+            $product->images = $imageName;
+        }
+
+        
         $product->naam = $request->input('name');
         $product->korting = $request->input('description');
         $product->prijs = $request->input('price');
@@ -112,8 +138,6 @@ class ProductController extends Controller
 
         $product->categorieen()->sync($request->input('categories'));
 
-        // Add code to handle categories and tags assignment if needed
-
         return redirect()->route('products.index')->with('success', 'Product updated successfully!');
     }
 
@@ -122,12 +146,11 @@ class ProductController extends Controller
     {
         $product = Producten::findOrFail($id);
 
-        // Detach categories before deleting
+        // Detach categories and tags before deleting
         $product->categorieen()->detach();
+        $product->tags()->detach();
 
         $product->delete();
-
-        // Add code to handle related categories and tags if needed
 
         return redirect()->route('products.index')->with('success', 'Product deleted successfully!');
     }

@@ -10,7 +10,7 @@
 <body>
 <div class="p-6">
     <h1 class="text-2xl font-bold">{{ isset($product) ? 'Edit Product' : 'Add New Product' }}</h1>
-    <form action="{{ isset($product) ? route('products.update', $product->id) : route('products.store') }}" method="POST" class="mt-4">
+    <form action="{{ isset($product) ? route('products.update', $product->id) : route('products.store') }}" method="POST" class="mt-4" enctype="multipart/form-data">
         @csrf
         @if(isset($product))
             @method('PUT')
@@ -27,9 +27,16 @@
             <label for="price" class="block text-sm font-medium text-gray-700">Price</label>
             <input type="number" class="mt-1 p-2 border rounded-md w-full" id="price" name="price" value="{{ isset($product) ? $product->prijs : old('prijs') }}">
         </div>
-        <div class="mb-4">
-            <label for="discount" class="block text-sm font-medium text-gray-700">Discount</label>
-            <input type="number" class="mt-1 p-2 border rounded-md w-full" id="discount" name="discount" value="{{ isset($product) ? $product->korting : old('korting') }}">
+        <div class="form-group">
+            <label for="discount">Discount (%)</label>
+            <input type="number" name="discount" id="discount" class="form-control" step="0.01" min="0" max="100" value="{{ isset($product) ? $product->korting : '' }}">
+        </div>
+        <div class="form-group">
+            <label for="image">Product Image</label>
+            <input type="file" name="image" id="image" class="form-control">
+            @if ($product->images)
+                <p class="mt-2">Current Image: <img src="{{ asset('images/' . $product->images) }}" alt="Current Product Image" class="max-w-xs"></p>
+            @endif
         </div>
         <div class="mb-4">
             <label for="categories" class="block text-sm font-medium text-gray-700">Categories</label>

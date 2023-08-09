@@ -14,22 +14,30 @@
     <table class="table-auto w-full">
         <thead>
             <tr>
-                <th class="px-4 py-2">Name</th>
-                <th class="px-4 py-2">Description</th>
-                <th class="px-4 py-2">Price</th>
-                <th class="px-4 py-2">Discount</th>
-                <th class="px-4 py-2">Categories</th>
-                <th class="px-4 py-2">Tags</th>
-                <th class="px-4 py-2">Actions</th>
+                <th class="px-4 py-2 text-left">Image</th>
+                <th class="px-4 py-2 text-left">Name</th>
+                <th class="px-4 py-2 text-left">Description</th>
+                <th class="px-4 py-2 text-left">Price</th>
+                <th class="px-4 py-2 text-left">Discount</th>
+                <th class="px-4 py-2 text-left">Categories</th>
+                <th class="px-4 py-2 text-left">Tags</th>
+                <th class="px-4 py-2 text-left">Actions</th>
             </tr>
         </thead>
         <tbody>
             @foreach($products as $product)
                 <tr>
+                    <td class="px-4 py-2">
+                        @if($product->images)
+                            <img src="{{ asset('images/' . $product->images) }}" alt="Product Image" class="max-w-xs">
+                        @else
+                            No Image
+                        @endif
+                    </td>
                     <td class="px-4 py-2">{{ $product->naam }}</td>
                     <td class="px-4 py-2">{{ $product->beschrijving }}</td>
                     <td class="px-4 py-2">{{ $product->prijs }}</td>
-                    <td class="px-4 py-2">{{ $product->korting }}</td>
+                    <td>{{ $product->korting ? $product->korting . '%' : 'No discount' }}</td>
                     <td class="px-4 py-2">{{ implode(', ', $product->categorieen->pluck('naam')->toArray()) }}</td>
                     <td class="px-4 py-2">{{ implode(', ', $product->tags->pluck('naam')->toArray()) }}</td>
                     <td class="px-4 py-2">
