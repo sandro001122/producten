@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CategoryController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -37,4 +38,5 @@ Route::put('/products/{product}', [ProductController::class, 'update'])->name('p
 // Remove the specified product from the database
 Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
 
-
+Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
+Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');

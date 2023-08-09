@@ -47,6 +47,7 @@
                     </option>
                 @endforeach
             </select>
+            <button type="button" class="mt-2 bg-green-500 text-white px-3 py-1 rounded" id="addCategoryBtn">Add Category</button>
         </div>
         <div class="mb-4">
             <label for="tags" class="block text-sm font-medium text-gray-700">Tags</label>
@@ -67,5 +68,35 @@
         <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded">{{ isset($product) ? 'Update' : 'Add' }}</button>
     </form>
 </div>
+<!-- Add Category Modal -->
+<div id="addCategoryModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center hidden">
+    <div class="bg-white p-6 rounded-lg">
+        <h2 class="text-xl font-bold mb-4">Add New Category</h2>
+        <form id="categoryFormModal" action="{{ route('categories.store') }}" method="POST">
+            @csrf
+            <div class="mb-2">
+                <label for="newCategory" class="block font-medium text-gray-700">Category Name</label>
+                <input type="text" name="newCategory" id="newCategory" class="mt-1 p-2 border rounded-md w-full" required>
+            </div>
+            <button type="submit" class="bg-blue-500 text-white px-3 py-1 rounded">Add Category</button>
+            <button type="button" class="bg-gray-300 text-gray-700 px-3 py-1 rounded ml-2" id="closeModal">Cancel</button>
+        </form>
+    </div>
+</div>
+<script>
+    const addCategoryBtn = document.getElementById('addCategoryBtn');
+    const addCategoryModal = document.getElementById('addCategoryModal');
+    const closeModalBtn = document.getElementById('closeModal');
+    const categoryFormModal = document.getElementById('categoryFormModal');
+
+    addCategoryBtn.addEventListener('click', () => {
+        addCategoryModal.classList.remove('hidden');
+    });
+
+    closeModalBtn.addEventListener('click', () => {
+        addCategoryModal.classList.add('hidden');
+        categoryFormModal.reset(); // Reset the form when closing the modal
+    });
+</script>
 </body>
 </html>

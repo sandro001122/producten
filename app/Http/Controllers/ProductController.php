@@ -62,7 +62,7 @@ class ProductController extends Controller
         foreach ($inputTags as $tagName) {
             $tagName = trim($tagName);
             if (!empty($tagName)) {
-                $tag = Tag::firstOrCreate(['naam' => $tagName]);
+                $tag = Tags::firstOrCreate(['naam' => $tagName]);
                 $tagIds[] = $tag->id;
             }
         }
