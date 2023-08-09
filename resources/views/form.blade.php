@@ -17,19 +17,19 @@
         @endif
         <div class="mb-4">
             <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
-            <input type="text" class="mt-1 p-2 border rounded-md w-full" id="name" name="name" value="{{ isset($product) ? $product->naam : old('naam') }}">
+            <input type="text" class="mt-1 p-2 border rounded-md w-full" id="name" name="name" value="{{ isset($product) ? $product->naam : old('name') }}">
         </div>
         <div class="mb-4">
             <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
-            <textarea class="mt-1 p-2 border rounded-md w-full" id="description" name="description">{{ isset($product) ? $product->beschrijving : old('beschrijving') }}</textarea>
+            <textarea class="mt-1 p-2 border rounded-md w-full" id="description" name="description">{{ isset($product) ? $product->beschrijving : old('description') }}</textarea>
         </div>
         <div class="mb-4">
             <label for="price" class="block text-sm font-medium text-gray-700">Price</label>
-            <input type="number" class="mt-1 p-2 border rounded-md w-full" id="price" name="price" value="{{ isset($product) ? $product->prijs : old('prijs') }}">
+            <input type="number" class="mt-1 p-2 border rounded-md w-full" id="price" name="price" value="{{ isset($product) ? $product->prijs : old('price') }}">
         </div>
         <div class="mb-4">
             <label for="discount" class="block text-sm font-medium text-gray-700">Discount (%)</label>
-            <input type="number" name="discount" id="discount" class="mt-1 p-2 border rounded-md w-full" step="0.01" min="0" max="100" value="{{ isset($product) ? $product->korting : '' }}">
+            <input type="number" name="discount" id="discount" class="mt-1 p-2 border rounded-md w-full" step="0.01" min="0" max="100" value="{{ isset($product) ? $product->korting : old('discount') }}">
         </div>
         <div class="mb-4">
             <label for="image" class="block text-sm font-medium text-gray-700">Product Image</label>
